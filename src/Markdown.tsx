@@ -1,6 +1,11 @@
-export function Markdown({ file }: { file: string }) {
+import { PropsWithChildren } from "react";
+
+export function Markdown({
+  file,
+  children,
+}: PropsWithChildren<{ file: string }>) {
   if (!file) {
-    return null;
+    console.warn("file is required");
   }
-  return <div>markdown渲染出错</div>;
+  return children ?? <div>markdown渲染出错</div>;
 }

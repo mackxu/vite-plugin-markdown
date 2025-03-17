@@ -2,8 +2,25 @@ import { HmrContext, Plugin } from "vite";
 import MarkdownIt from "markdown-it";
 import path from "node:path";
 import fs from "node:fs";
+import hljs from "highlight.js";
 
-const md = new MarkdownIt();
+const md = new MarkdownIt({
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        const code = hljs
+          .highlight(str, { language: lang })
+          .value.replaceAll(/{/g, "&#123;")
+          .replaceAll(/}/g, "&#125;")
+          .replaceAll(/\n/g, "<br />");
+        return code;
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    return ""; // use external default escaping
+  },
+});
 
 // 存放md url 与 引入文件id的映射关系
 const mdRelationMap = new Map<string, string[]>();
@@ -45,5 +62,5 @@ export function markdownPlugin(): Plugin {
 }
 
 function transformMarkdown(mdText: string) {
-  return `<section className="md-content">${md.render(mdText)}</section>`;
+  return `<Markdown>${md.render(mdText)}</Markdown>`;
 }
