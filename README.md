@@ -21,7 +21,8 @@ declare module "virtual:fib" {
 - [x] 读取并替换内容
 - [x] 支持 md 文件热更新(监听 md 文件的变化， 再将依赖 md 文件的文件热重载)
 - [x] 完善热更新，多个文件渲染同一个 md
-- [ ] 解决 readme.md 不能正常渲染
+- [x] 解决 readme.md 不能正常渲染
+- [x] 解决 filter(Boolean) 类型的问题
 
 ## vscode debugging
 
@@ -50,4 +51,22 @@ declare module "virtual:fib" {
     "**/node_modules/.vite-temp/**"
   ]
 }
+```
+
+## filter(Boolean) 类型的问题
+
+问题复现：
+
+```ts
+// (boolean | string)[]
+[isProduction() && "/prod-path", "first", "second"].filter(Boolean);
+```
+
+解决方案：
+
+```ts
+// string[]
+[isProduction() && "/prod-path", "first", "second"].filter(
+  (x): x is string => !!x
+);
 ```
