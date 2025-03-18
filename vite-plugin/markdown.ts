@@ -56,7 +56,7 @@ export function markdownPlugin(): Plugin {
       mdRelationMap.delete(file); // 清除映射关系
       const relationModules = relationModuleIds
         .map((id) => server.moduleGraph.getModuleById(id))
-        .filter((m): m is ModuleNode => !!m);
+        .filter(isModuleNode);
       // 更新依赖文件，用于热更新
       return [...modules, ...relationModules];
     },
@@ -65,4 +65,8 @@ export function markdownPlugin(): Plugin {
 
 function transformMarkdown(mdText: string) {
   return `<Markdown>${md.render(mdText)}</Markdown>`;
+}
+
+function isModuleNode(m: unknown) {
+  return m instanceof ModuleNode;
 }

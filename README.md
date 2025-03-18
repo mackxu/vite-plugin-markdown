@@ -62,7 +62,7 @@ declare module "virtual:fib" {
 [isProduction() && "/prod-path", "first", "second"].filter(Boolean);
 ```
 
-解决方案：
+解决方案(1)：
 
 ```ts
 // string[]
@@ -70,3 +70,13 @@ declare module "virtual:fib" {
   (x): x is string => !!x
 );
 ```
+
+解决方案(2)：
+
+```ts
+const isString = (x: unknown) => typeof x === "string";
+// string[]
+[isProduction() && "/prod-path", "first", "second"].filter(isString);
+```
+
+推荐后者
