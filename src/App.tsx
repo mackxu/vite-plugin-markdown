@@ -3,8 +3,10 @@ import viteLogo from "/vite.svg";
 import "./App.css";
 import { Foo } from "./Foo";
 import { Markdown } from "./Markdown";
+import { useState } from "react";
 
 function App() {
+  const [visible, setVisible] = useState(true);
   return (
     <>
       <div>
@@ -15,7 +17,8 @@ function App() {
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
-        <Foo />
+        <button onClick={() => setVisible(false)}>隐藏</button>
+        {visible && <Foo />}
         <Markdown file="../README.md" />
       </div>
     </>

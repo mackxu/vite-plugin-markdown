@@ -1,9 +1,8 @@
-import { HmrContext, Plugin } from "vite";
+import type { HmrContext, Plugin, ModuleNode } from "vite";
 import MarkdownIt from "markdown-it";
 import path from "node:path";
 import fs from "node:fs";
 import hljs from "highlight.js";
-import { ModuleNode } from "vite";
 
 const md = new MarkdownIt({
   highlight: function (str: string, lang: string) {
@@ -32,7 +31,7 @@ export function markdownPlugin(): Plugin {
     name: "vite:markdown",
     enforce: "pre",
     transform(code: string, id: string) {
-      const reactRE = /\.(t|j)sx$/;
+      const reactRE = /\.(t|j)sx$/; // 匹配jsx和tsx文件
       const markdownRE = /<Markdown file=.*?\/>/g;
       const filepathRE = /file=(["'])(.*?)\1/;
       if (!(reactRE.test(id) && markdownRE.test(code))) return code;
@@ -40,10 +39,8 @@ export function markdownPlugin(): Plugin {
       return code.replaceAll(markdownRE, (match) => {
         const fileRelativePath = match.match(filepathRE)?.[2]; // 第二个捕获组
         const filePath = path.resolve(fileDir, fileRelativePath!);
-        mdRelationMap.set(
-          filePath,
-          (mdRelationMap.get(filePath) || []).concat(id)
-        );
+        const relationModuleIds = mdRelationMap.get(filePath) || [];
+        mdRelationMap.set(filePath, [...new Set([...relationModuleIds, id])]);
         // 读取md文件内容
         const mdText = fs.readFileSync(filePath, "utf-8");
         return transformMarkdown(mdText);
@@ -53,10 +50,10 @@ export function markdownPlugin(): Plugin {
       if (!file.endsWith(".md")) return modules;
       const relationModuleIds = mdRelationMap.get(file);
       if (!relationModuleIds) return modules;
-      mdRelationMap.delete(file); // 清除映射关系
+      console.log(relationModuleIds);
       const relationModules = relationModuleIds
         .map((id) => server.moduleGraph.getModuleById(id))
-        .filter(isModuleNode);
+        .filter((m): m is ModuleNode => !!m);
       // 更新依赖文件，用于热更新
       return [...modules, ...relationModules];
     },
@@ -65,8 +62,4 @@ export function markdownPlugin(): Plugin {
 
 function transformMarkdown(mdText: string) {
   return `<Markdown>${md.render(mdText)}</Markdown>`;
-}
-
-function isModuleNode(m: unknown) {
-  return m instanceof ModuleNode;
 }
