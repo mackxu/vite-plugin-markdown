@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@types/node": "^22.13.10",
+    "@rollup/pluginutils": "^5.1.4",
+    "@svgr/core": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
     "highlight.js": "^11.11.1",
     "markdown-it": "^14.1.0",
     "react": "^19.0.0",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.13.10",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

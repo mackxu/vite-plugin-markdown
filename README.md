@@ -80,3 +80,17 @@ const isString = (x: unknown) => typeof x === "string";
 ```
 
 推荐后者
+
+## svg plugin
+
+使用 load 钩子，把 svg 转成 React 组件
+
+源码学习： https://github.com/pd4d10/vite-plugin-svgr
+
+- @rollup/pluginutils
+- 使用 s 修饰符使 . 匹配换行符(正则表达式)
+- React.FunctionComponent<T>
+- React.ComponentProps<"svg">
+- React.ComponentPropsWithRef<T>
+- transformWithEsbuild esbuild 工具
+- 声明模块 declare module "\*.svg?react" {}
