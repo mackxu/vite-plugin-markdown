@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 export function Markdown({
   file,
   children,
-}: PropsWithChildren<{ file: string }>) {
+}: PropsWithChildren<{ file?: string }>) {
   if (!file) {
     console.warn("file is required");
   }

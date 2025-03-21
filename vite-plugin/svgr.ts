@@ -32,11 +32,12 @@ export function viteSvgrPlugin({
           caller: {
             defaultPlugins: [jsx],
           },
+          componentName: "SvgReactComponent",
         }
       );
-      // console.log(componentCode);
       const result = await transformWithEsbuild(componentCode, id, {
         loader: "jsx",
+        jsx: "automatic",
       });
 
       return {
